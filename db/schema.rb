@@ -21,6 +21,19 @@ ActiveRecord::Schema.define(version: 2021_06_26_062916) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "items", id: :serial, force: :cascade do |t|
+    t.integer "seller_id", null: false
+    t.string "title", limit: 255, null: false
+    t.text "description", null: false
+    t.decimal "price", precision: 10, scale: 2, null: false
+    t.string "type", limit: 255, null: false
+    t.string "size", limit: 255, null: false
+    t.string "status", limit: 255, null: false
+    t.string "condition", limit: 255, null: false
+    t.string "city", limit: 255, null: false
+    t.datetime "created_at", default: -> { "now()" }
+  end
+
   create_table "line_items", force: :cascade do |t|
     t.bigint "order_id"
     t.bigint "product_id"
@@ -41,6 +54,11 @@ ActiveRecord::Schema.define(version: 2021_06_26_062916) do
     t.string "email"
   end
 
+  create_table "photos", id: :serial, force: :cascade do |t|
+    t.integer "item_id", null: false
+    t.string "url", limit: 255, null: false
+  end
+
   create_table "products", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -53,7 +71,35 @@ ActiveRecord::Schema.define(version: 2021_06_26_062916) do
     t.index ["category_id"], name: "index_products_on_category_id"
   end
 
+  create_table "users", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.string "email", limit: 255, null: false
+    t.string "password_digest"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "widgets", id: :serial, force: :cascade do |t|
+    t.integer "user_id"
+    t.string "name", limit: 255, null: false
+  end
+
+  create_table "wishlist", id: :serial, force: :cascade do |t|
+    t.integer "user_id", null: false
+  end
+
+  create_table "wishlisted_items", id: :serial, force: :cascade do |t|
+    t.integer "wishlist_id", null: false
+    t.integer "item_id", null: false
+  end
+
+  add_foreign_key "items", "users", column: "seller_id", name: "items_seller_id_fkey"
   add_foreign_key "line_items", "orders"
   add_foreign_key "line_items", "products"
+  add_foreign_key "photos", "items", name: "photos_item_id_fkey"
   add_foreign_key "products", "categories"
+  add_foreign_key "widgets", "users", name: "widgets_user_id_fkey"
+  add_foreign_key "wishlist", "users", name: "wishlist_user_id_fkey"
+  add_foreign_key "wishlisted_items", "items", name: "wishlisted_items_item_id_fkey"
+  add_foreign_key "wishlisted_items", "wishlist", name: "wishlisted_items_wishlist_id_fkey"
 end
