@@ -54,19 +54,36 @@
           >
             Admin
           </a>
+
           <ul class="dropdown-menu dropdown-menu-dark">
             <li><%= link_to 'Dashboard', [:admin, :root], class: "nav-link" %></li>
             <li><%= link_to 'Products', [:admin, :products], class: "nav-link" %></li>
           </ul>
         </li>
+
         <li class="nav-item">
           <%= link_to '/about', class: "nav-link" do %> About <% end %>
         </li>
-
-        <li class="nav-item end-0">
+          
+        <li class="nav-item">
           <%= link_to cart_path, class: "nav-link " do %> <%= fa_icon "shopping-cart" %>
-          My Cart (<%= cart.size %>) <% end %>
+            My Cart (<%= cart.size %>) <% end %>
         </li>
+        
+        <% if current_user %>
+          <li class="nav-item end-0">
+              <%= link_to '/logout', class: "nav-link" do %> Logout <% end %>
+          </li>
+
+        <% else %> 
+          <li class="nav-item end-0">
+            <%= link_to '/users/new', class: "nav-link" do %> Sign Up <% end %>
+          </li>
+          <li class="nav-item end-0">
+           <%= link_to '/sessions/new', class: "nav-link" do %> Login <% end %>
+          </li>
+        <% end %>
+
       </ul>
     </div>
   </div>
